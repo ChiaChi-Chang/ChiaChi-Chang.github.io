@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <style>
+        .container {
+            width: 30%;
+            justify-content: center;
+            margin: auto;
+            border: 6px solid;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .tip {
+            height: 50px;
+            border: 3px solid;
+        }
+
+        .answer {
+            height: 40px;
+            border: 3px solid;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>終極密碼</h1>
+        <div class="tip w-100 text-center fs-2"></div>
+        <div class="row">
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <button id="restart" class="btn btn-secondary">生成密碼</button>
+
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <div class="answer w-25"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 p-1">
+                <button class="btn btn-primary w-100 d-block num">1</button>
+            </div>
+            <div class="col-4 p-1">
+                <button class="btn btn-primary w-100 d-block num">2</button>
+            </div>
+            <div class="col-4 p-1">
+                <button class="btn btn-primary w-100 d-block num">3</button>
+            </div>
+            <div class="col-4 p-1">
+                <button class="btn btn-primary w-100 d-block num">4</button>
+            </div>
+            <div class="col-4 p-1">
+                <button class="btn btn-primary w-100 d-block num">5</button>
+            </div>
+            <div class="col-4 p-1">
+                <button class="btn btn-primary w-100 d-block num">6</button>
+            </div>
+            <div class="col-4 p-1">
+                <button class="btn btn-primary w-100 d-block num">7</button>
+            </div>
+            <div class="col-4 p-1">
+                <button class="btn btn-primary w-100 d-block num">8</button>
+            </div>
+            <div class="col-4 p-1">
+                <button class="btn btn-primary w-100 d-block num">9</button>
+            </div>
+            <div class="col-4 p-1">
+                <button id="cancel" class="btn btn-primary w-100 d-block">X</button>
+            </div>
+            <div class="col-4 p-1">
+                <button class="btn btn-primary w-100 d-block num">0</button>
+            </div>
+            <div class="col-4 p-1">
+                <button id="send" class="btn btn-primary w-100 d-block">V</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        let max;
+        let min;
+        let randomNumber;
+        let restart = document.querySelector('#restart');
+        let num = document.querySelectorAll('.num'); //數字
+        let btns = document.querySelectorAll('.btn-primary'); //下面的按鈕
+        let send = document.querySelector('#send')  //V
+        let cancel = document.querySelector('#cancel');  //X
+        let tip = document.querySelector('.tip');
+        let answer = document.querySelector('.answer')
+
+
+
+
+
+        btns.forEach((item, index) => {
+            btns[index].disabled = true;
+        })
+
+        num.forEach((item, index) => {
+            item.addEventListener('click', function () {
+                answer.innerText += item.innerText;
+            })
+        })
+
+
+        function numRange() {
+            tip.innerText = `${min}~${max}`;
+        }
+
+        function clear() {
+            answer.innerText = "";
+        }
+
+        function randomNum(max) {
+            clear();
+            return Math.floor(Math.random() * max)
+        }
+
+        function reset() {
+            clear();
+
+            max = 100;
+            min = 0;
+
+            btns.forEach((item, index) => {
+                btns[index].disabled = false;
+            })
+
+            randomNumber = randomNum(100);  //產生隨機數字1-99
+
+            numRange();
+        }
+
+
+
+        send.addEventListener('click', function () {   //判斷答案
+            if (answer.innerText == randomNumber) {
+                alert("YOU WIN!!!")
+                numRange();
+                reset();
+
+            } else if (answer.innerText >= max || answer.innerText <= min) {
+                alert("請輸入正確數字");
+                clear();
+
+            }
+            else if (answer.innerText > randomNumber) {
+                max = answer.innerText;
+                numRange();
+                clear();
+
+            }
+            else if (answer.innerText < randomNumber) {
+                min = answer.innerText;
+                numRange();
+                clear();
+
+            }
+
+
+        })
+
+
+
+        cancel.addEventListener('click', clear);//重新作答
+
+
+        restart.addEventListener('click', reset)//開始遊戲
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>
