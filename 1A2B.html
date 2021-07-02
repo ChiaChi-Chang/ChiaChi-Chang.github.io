@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>1A2B</title>
+    <style>
+        h1 {
+            width: 100%;
+            text-align: center;
+
+        }
+
+        .container {
+            width: 30%;
+            justify-content: center;
+            border: 3px solid black;
+
+        }
+    </style>
+</head>
+
+<body>
+    <h1>1A2B</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <button class="btn btn-primary w-100 set">開始</button>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-danger w-100 reset wait">重來</button>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-success w-100 showans wait">看答案</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="answerLi">
+                <ul id="guessResults" class="list-group">
+                    <!--span-->
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-10">
+                <input type="text" class="w-100 h-100">
+            </div>
+            <div class="col-2">
+                <button class="btn btn-info w-100 guess wait">猜</button>
+            </div>
+        </div>
+    </div>
+
+    <template id="ansli">
+        <li class="list-group-item">
+            <span class="AB"></span>
+            <span class="history"></span>
+        </li>
+    </template>
+
+
+    <script>
+        let set = document.querySelector('.set')  //開始遊戲 產生數字 O
+        let reset = document.querySelector('.reset')  //重新產生數字 O
+        let showans = document.querySelector('.showans')  //顯示答案 O
+        let guess = document.querySelector('.guess')  //猜 
+        let input = document.querySelector('input')
+        let random = new Array();
+        let ansarr = new Array();  //input[]
+        let wait = document.querySelectorAll('.wait') //disabled
+        let a = 0;
+        let b = 0;
+        let ul = document.querySelector('ul');
+        wait.forEach((btn, index) => {
+            wait[index].disabled = true;
+        })
+
+        function clearinput() {  //input清空
+            input.value = '';
+            ansarr = [];
+            a = 0;
+            b = 0;
+        }
+
+        function setnum() {
+            clearinput();
+
+            while (random.length < 4) {     //骰出隨機4個不重複的數字
+                let num = Math.floor(Math.random() * 10)
+                if (random.includes(num) == false) {
+                    random.push(num);
+                }
+            }
+
+        }
+
+        function setansarr() {
+            ansarr = input.value.split('');   //input[]
+        }
+
+        function addLi() {
+            let ansLi = document.querySelector('#ansli')
+            let cloneContent = ansLi.content.cloneNode(true);
+
+            let AB = cloneContent.querySelector('.AB')
+            let his = cloneContent.querySelector('.history')
+
+            if (a == 4) {
+                AB.setAttribute("class", "badge bg-success")
+            }
+            else{
+                AB.setAttribute("class", "badge bg-danger")
+            }
+            AB.innerText = `${a}A${b}B`
+            his.innerText = `${input.value}`
+            ul.append(cloneContent);
+        }
+
+        function success(){
+            if(a==4){
+                alert('猜中了!!!')
+            }
+        }
+
+
+
+
+        set.addEventListener('click', function () {//開始
+            clearinput();
+            wait.forEach((btn, index) => {
+                wait[index].disabled = false;
+            })
+            setnum();
+            set.disabled = true;
+        })
+
+        showans.addEventListener('click', function () {
+            clearinput();
+            alert(random);
+        })
+
+        reset.addEventListener('click', function () {
+            clearinput();
+            setnum();
+        });
+
+
+        guess.addEventListener('click', function () {     //判斷
+            setansarr()
+
+            if (ansarr.length == 4) {
+                ansarr.forEach((item1) => {
+                    random.forEach((item2) => {
+                        if (item1 == item2) {
+                            if (ansarr.indexOf(`${item1}`) == random.indexOf(item2)) {
+                                a++
+                            }
+                            else if (ansarr.indexOf(`${item1}`) != random.indexOf(item2)) {
+                                b++;
+                            }
+                        }
+                    })
+                })
+                addLi();
+            }
+            else (alert('請入正確長度的數字'))
+            success();
+            clearinput();
+
+        })
+
+
+    </script>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>
